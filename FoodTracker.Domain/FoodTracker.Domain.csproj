@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FoodTracker.Database\FoodTracker.Database.csproj" />
+    <ProjectReference Include="..\FoodTracker.Model\FoodTracker.Model.csproj" />
+  </ItemGroup>
+
 </Project>

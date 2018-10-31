@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodTracker.Database;
+using FoodTracker.Domain.Services;
+using FoodTracker.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +32,8 @@ namespace FoodTracker
 
             services.AddDbContext<FoodTrackerContext>
                 (options => options.UseSqlServer(Configuration.GetConnectionString("FoodTrackerDatabase")));
+
+            services.AddTransient<IMealService, MealService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
