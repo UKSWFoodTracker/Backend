@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FoodTracker.Database;
 using FoodTracker.Domain.Services.Interfaces;
@@ -29,6 +30,24 @@ namespace FoodTracker.Domain.Services
                 .ToListAsync();
 
             return mealsWithIngredients;
+        }
+
+        public async Task CreateMeal(Meal meal)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _context.AddAsync(meal);
+
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw new Exception("Add meal failed", e);
+                }
+            }
         }
     }
 }
