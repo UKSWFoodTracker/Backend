@@ -34,20 +34,10 @@ namespace FoodTracker.Domain.Services
 
         public async Task CreateMeal(Meal meal)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    await _context.AddAsync(meal);
+            await _context.AddAsync(meal);
+            _context.SaveChanges();
 
-                    transaction.Commit();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw new Exception("Add meal failed", e);
-                }
-            }
+
         }
     }
 }

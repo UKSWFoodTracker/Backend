@@ -10,6 +10,7 @@ namespace FoodTracker.Database
 
         public DbSet<Meal> Meals { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<MealIngredient> MealIngredients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
