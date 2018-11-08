@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using FoodTracker.Database;
 using FoodTracker.Domain.Services;
 using FoodTracker.Domain.Services.Interfaces;
@@ -11,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace FoodTracker
 {
@@ -30,6 +26,17 @@ namespace FoodTracker
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new Info
+                    {
+                        Title = "FoodTracker API",
+                        Version = "V1.0",
+                        Contact = new Contact {Email = "sverda300@gmail.com", Name = "Damian Ubowski"}
+                    });
+                }
+            );
+
             services.AddDbContext<FoodTrackerContext>
                 (options => options.UseSqlServer(Configuration.GetConnectionString("FoodTrackerDatabase")));
 
@@ -45,6 +52,12 @@ namespace FoodTracker
             }
 
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FoodTracker API");
+            });
         }
     }
 }
