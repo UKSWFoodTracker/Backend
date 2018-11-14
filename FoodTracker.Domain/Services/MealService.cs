@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FoodTracker.Database;
 using FoodTracker.Domain.Services.Interfaces;
@@ -32,12 +33,35 @@ namespace FoodTracker.Domain.Services
             return mealsWithIngredients;
         }
 
-        public async Task CreateMeal(Meal meal)
+        public async Task CreateMealAsync(Meal meal, IEnumerable<Ingredient> ingredients)
         {
             await _context.AddAsync(meal);
             _context.SaveChanges();
 
+            foreach (var ingredient in ingredients)
+            {
+                int ingredientId;
+                if (_context.Ingredients.Any(i => i.Name == ingredient.Name))
+                {
+                    ingredientId = _context.Ingredients
+                        .Where(i => i.Name == ingredient.Name)
+                        .Select(i => i.Id)
+                        .Single();
+                }
+                else
+                {
+                    await _context.Ingredients.AddAsync(ingredient);
+                    _context.SaveChanges();
 
+                    ingredientId = ingredient.Id;
+                }
+
+                var mealIngredient = new MealIngredient { MealId = meal.Id, IngredientId = ingredientId };
+
+                await _context.MealIngredients.AddAsync(mealIngredient);
+            }
+
+            _context.SaveChanges();
         }
     }
 }

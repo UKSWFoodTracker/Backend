@@ -17,7 +17,7 @@ namespace FoodTracker.Controllers
     {
         private readonly IMealService _mealService;
         private readonly IMapper _mapper;
-        private FoodTrackerContext _context;
+        private readonly FoodTrackerContext _context;
 
         public MealController(IMealService mealService, IMapper mapper, FoodTrackerContext context)
         {
@@ -43,35 +43,9 @@ namespace FoodTracker.Controllers
                 throw new Exception("Meal model is invalid");
 
             var meal = _mapper.Map<MealDto, Meal>(mealDto);
+            var ingredients = mealDto.Ingredients.Select(i => _mapper.Map<IngredientDto, Ingredient>(i));
 
-            await _context.AddAsync(meal);
-            _context.SaveChanges();
-
-            foreach (var ingredientDto in mealDto.Ingredients)
-            {
-                int ingredientId;
-                if (_context.Ingredients.Any(i => i.Name == ingredientDto.Name))
-                {
-                    ingredientId = _context.Ingredients
-                        .Where(i => i.Name == ingredientDto.Name)
-                        .Select(i => i.Id)
-                        .Single();
-                }
-                else
-                {
-                    var ingredient = _mapper.Map<IngredientDto, Ingredient>(ingredientDto);
-                    await _context.Ingredients.AddAsync(ingredient);
-                    _context.SaveChanges();
-
-                    ingredientId = ingredient.Id;
-                }
-
-                var mealIngredient = new MealIngredient {MealId = meal.Id, IngredientId = ingredientId };
-
-                await _context.MealIngredients.AddAsync(mealIngredient);
-            }
-
-            _context.SaveChanges();
+            await _mealService.CreateMealAsync(meal, ingredients);
         }
 
         [HttpGet]

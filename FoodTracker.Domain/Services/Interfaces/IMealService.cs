@@ -8,6 +8,6 @@ namespace FoodTracker.Domain.Services.Interfaces
     {
         Task<IEnumerable<Meal>> GetAllMealsAsync();
         Task<IEnumerable<Meal>> GetAllMealsWithIngredientsAsync();
-        Task CreateMeal(Meal meal);
+        Task CreateMealAsync(Meal meal, IEnumerable<Ingredient> ingredients);
     }
 }
