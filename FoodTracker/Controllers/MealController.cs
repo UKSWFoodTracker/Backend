@@ -47,31 +47,5 @@ namespace FoodTracker.Controllers
 
             await _mealService.CreateMealAsync(meal, ingredients);
         }
-
-        [HttpGet]
-        [Route("mock")]
-        public MealDto GetEmpty()
-        {
-            var meal = new Meal()
-            {
-                Id = 1,
-                MealIngredients = new List<MealIngredient>()
-            };
-
-            var ingredient = new Ingredient
-            {
-                Id = 1,
-                Calories = 100,
-                Name = "Fish",
-                MealIngredients = new List<MealIngredient>()
-            };
-
-            var mealIngredient = new MealIngredient {IngredientId = 1, Ingredient = ingredient, Meal = meal, MealId = 1};
-
-            meal.MealIngredients.Add(mealIngredient);
-            ingredient.MealIngredients.Add(mealIngredient);
-
-            return _mapper.Map<MealDto>(meal);
-        }
     }
 }
