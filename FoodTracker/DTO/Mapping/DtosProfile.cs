@@ -23,6 +23,12 @@ namespace FoodTracker.DTO.Mapping
                     option => option.MapFrom(model => model.MealIngredients))
                 .ReverseMap()
                 .ForMember(model => model.MealIngredients, opt => opt.Ignore());
+
+            CreateMap<Meal, MealUpdateDto>()
+                .ForMember(dto => dto.Id, opt => opt.MapFrom(model => model.Id))
+                .ForMember(dto => dto.Ingredients, opt => opt.MapFrom(model => model.MealIngredients))
+                .ReverseMap()
+                .ForMember(model => model.MealIngredients, opt => opt.Ignore());
         }
     }
 }

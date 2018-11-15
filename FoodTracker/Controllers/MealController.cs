@@ -50,12 +50,12 @@ namespace FoodTracker.Controllers
 
         [HttpPost]
         [Route("update")]
-        public async Task UpdateMeal([FromBody] MealDto mealDto)
+        public async Task UpdateMeal([FromBody] MealUpdateDto mealDto)
         {
             if (!ModelState.IsValid)
                 throw new Exception("Meal model is invalid");
 
-            var meal = _mapper.Map<MealDto, Meal>(mealDto);
+            var meal = _mapper.Map<MealUpdateDto, Meal>(mealDto);
             var ingredients = mealDto.Ingredients.Select(i => _mapper.Map<IngredientDto, Ingredient>(i));
 
             await _mealService.UpdateMealAsync(meal, ingredients);
