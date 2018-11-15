@@ -74,5 +74,39 @@ namespace FoodTracker.Domain.Services
             _context.Remove(trashMeal);
             _context.SaveChanges();
         }
+
+        public async Task UpdateMealAsync(Meal updateMeal, IEnumerable<Ingredient> updateIngredients)
+        {
+            if(!_context.Meals.Any(m => m.Id == updateMeal.Id))
+                throw new Exception("There is no meal with given id");
+
+            var trashMealIngredients = _context.MealIngredients.Where(mi => mi.MealId == updateMeal.Id);
+            _context.MealIngredients.RemoveRange(trashMealIngredients);
+
+            foreach (var ingredient in updateIngredients)
+            {
+                int ingredientId;
+                if (_context.Ingredients.Any(i => i.Name == ingredient.Name))
+                {
+                    ingredientId = _context.Ingredients
+                        .Where(i => i.Name == ingredient.Name)
+                        .Select(i => i.Id)
+                        .Single();
+                }
+                else
+                {
+                    await _context.Ingredients.AddAsync(ingredient);
+                    _context.SaveChanges();
+
+                    ingredientId = ingredient.Id;
+                }
+
+                var mealIngredient = new MealIngredient { MealId = updateMeal.Id, IngredientId = ingredientId };
+
+                await _context.MealIngredients.AddAsync(mealIngredient);
+            }
+
+            _context.SaveChanges();
+        }
     }
 }
