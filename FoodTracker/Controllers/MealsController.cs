@@ -13,13 +13,13 @@ namespace FoodTracker.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MealController : ControllerBase
+    public class MealsController : ControllerBase
     {
         private readonly IMealService _mealService;
         private readonly IMapper _mapper;
         private readonly FoodTrackerContext _context;
 
-        public MealController(IMealService mealService, IMapper mapper, FoodTrackerContext context)
+        public MealsController(IMealService mealService, IMapper mapper, FoodTrackerContext context)
         {
             _mealService = mealService;
             _mapper = mapper;
