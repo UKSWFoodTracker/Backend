@@ -47,5 +47,12 @@ namespace FoodTracker.Controllers
 
             await _mealService.CreateMealAsync(meal, ingredients);
         }
+
+        [HttpGet]
+        [Route("delete/{mealId}")]
+        public async Task DeleteMeal(int mealId)
+        {
+            await _mealService.DeleteMealAsync(mealId);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodTracker.Database;
@@ -60,6 +61,17 @@ namespace FoodTracker.Domain.Services
                 await _context.MealIngredients.AddAsync(mealIngredient);
             }
 
+            _context.SaveChanges();
+        }
+
+        public async Task DeleteMealAsync(int mealId)
+        {
+            if(!_context.Meals.Any(m => m.Id == mealId))
+                throw new Exception("There is no meal with given id");
+
+            var trashMeal = await _context.Meals.SingleAsync(m => m.Id == mealId);
+
+            _context.Remove(trashMeal);
             _context.SaveChanges();
         }
     }
