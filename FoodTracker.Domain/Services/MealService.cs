@@ -80,6 +80,9 @@ namespace FoodTracker.Domain.Services
             if(!_context.Meals.Any(m => m.Id == updateMeal.Id))
                 throw new Exception("There is no meal with given id");
 
+            var oldMeal = await _context.Meals.SingleAsync(m => m.Id == updateMeal.Id);
+            oldMeal.Name = updateMeal.Name;
+
             var trashMealIngredients = _context.MealIngredients.Where(mi => mi.MealId == updateMeal.Id);
             _context.MealIngredients.RemoveRange(trashMealIngredients);
 
