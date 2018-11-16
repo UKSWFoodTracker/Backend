@@ -28,21 +28,23 @@ namespace FoodTracker.Controllers
 
         [HttpGet]
         [Route("all")]
-        public async Task<IEnumerable<MealDto>> GetAsync()
+        public async Task<IEnumerable<MealDto>> GetAllMealsAsync()
         {
             var allMeals = await _mealService.GetAllMealsWithIngredientsAsync();
 
-            return allMeals.Select(m => _mapper.Map<MealDto>(m));
+            var dtos = allMeals.Select(m => _mapper.Map<Meal, MealDto>(m));
+
+            return dtos;
         }
 
         [HttpPost]
         [Route("add")]
-        public async Task AddMeal([FromBody] MealDto mealDto)
+        public async Task CreateMeal([FromBody] MealCreateDto mealDto)
         {
             if (!ModelState.IsValid)
                 throw new Exception("Meal model is invalid");
 
-            var meal = _mapper.Map<MealDto, Meal>(mealDto);
+            var meal = _mapper.Map<MealCreateDto, Meal>(mealDto);
             var ingredients = mealDto.Ingredients.Select(i => _mapper.Map<IngredientDto, Ingredient>(i));
 
             await _mealService.CreateMealAsync(meal, ingredients);
