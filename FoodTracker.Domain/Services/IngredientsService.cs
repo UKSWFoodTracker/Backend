@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FoodTracker.Database;
 using FoodTracker.Domain.Services.Interfaces;
@@ -31,6 +32,13 @@ namespace FoodTracker.Domain.Services
 
                 return newIngredient;
             }
+        }
+
+        public IEnumerable<Ingredient> GetAllIngredients()
+        {
+            var allIngredients = _context.Ingredients.AsEnumerable();
+
+            return allIngredients;
         }
     }
 }

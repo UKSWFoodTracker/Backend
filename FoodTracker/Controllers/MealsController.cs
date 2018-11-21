@@ -35,7 +35,7 @@ namespace FoodTracker.Controllers
         }
 
         [HttpPost]
-        public async Task CreateMeal([FromBody] MealCreateDto mealDto)
+        public async Task CreateMealAsync([FromBody] MealCreateDto mealDto)
         {
             if (!ModelState.IsValid)
                 throw new Exception("Meal model is invalid");
@@ -47,7 +47,7 @@ namespace FoodTracker.Controllers
         }
 
         [HttpPut]
-        public async Task UpdateMeal([FromBody] MealUpdateDto mealDto)
+        public async Task UpdateMealAsync([FromBody] MealUpdateDto mealDto)
         {
             if (!ModelState.IsValid)
                 throw new Exception("Meal model is invalid");
@@ -60,7 +60,7 @@ namespace FoodTracker.Controllers
 
         [HttpDelete]
         [Route("{mealId}")]
-        public async Task DeleteMeal(int mealId)
+        public async Task DeleteMealAsync(int mealId)
         {
             await _mealService.DeleteMealAsync(mealId);
         }
