@@ -17,17 +17,14 @@ namespace FoodTracker.Controllers
     {
         private readonly IMealService _mealService;
         private readonly IMapper _mapper;
-        private readonly FoodTrackerContext _context;
 
         public MealsController(IMealService mealService, IMapper mapper, FoodTrackerContext context)
         {
             _mealService = mealService;
             _mapper = mapper;
-            _context = context;
         }
 
         [HttpGet]
-        [Route("all")]
         public async Task<IEnumerable<MealDto>> GetAllMealsAsync()
         {
             var allMeals = await _mealService.GetAllMealsWithIngredientsAsync();
@@ -38,7 +35,6 @@ namespace FoodTracker.Controllers
         }
 
         [HttpPost]
-        [Route("add")]
         public async Task CreateMeal([FromBody] MealCreateDto mealDto)
         {
             if (!ModelState.IsValid)
@@ -50,8 +46,7 @@ namespace FoodTracker.Controllers
             await _mealService.CreateMealAsync(meal, ingredients);
         }
 
-        [HttpPost]
-        [Route("update")]
+        [HttpPut]
         public async Task UpdateMeal([FromBody] MealUpdateDto mealDto)
         {
             if (!ModelState.IsValid)
@@ -63,8 +58,8 @@ namespace FoodTracker.Controllers
             await _mealService.UpdateMealAsync(meal, ingredients);
         }
 
-        [HttpGet]
-        [Route("delete/{mealId}")]
+        [HttpDelete]
+        [Route("{mealId}")]
         public async Task DeleteMeal(int mealId)
         {
             await _mealService.DeleteMealAsync(mealId);
