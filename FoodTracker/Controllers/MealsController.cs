@@ -7,6 +7,7 @@ using FoodTracker.Database;
 using FoodTracker.Domain.Services.Interfaces;
 using FoodTracker.DTO;
 using FoodTracker.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodTracker.Controllers
@@ -24,7 +25,7 @@ namespace FoodTracker.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IEnumerable<MealDto>> GetAllMealsAsync()
         {
             var allMeals = await _mealService.GetAllMealsWithIngredientsAsync();
@@ -34,7 +35,7 @@ namespace FoodTracker.Controllers
             return dtos;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task CreateMealAsync([FromBody] MealCreateDto mealDto)
         {
             if (!ModelState.IsValid)
@@ -46,7 +47,7 @@ namespace FoodTracker.Controllers
             await _mealService.CreateMealAsync(meal, ingredients);
         }
 
-        [HttpPut]
+        [HttpPut, Authorize]
         public async Task UpdateMealAsync([FromBody] MealUpdateDto mealDto)
         {
             if (!ModelState.IsValid)
@@ -58,7 +59,7 @@ namespace FoodTracker.Controllers
             await _mealService.UpdateMealAsync(meal, ingredients);
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize]
         [Route("{mealId}")]
         public async Task DeleteMealAsync(int mealId)
         {
