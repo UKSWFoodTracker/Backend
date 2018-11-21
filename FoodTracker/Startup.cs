@@ -44,6 +44,7 @@ namespace FoodTracker
                 (options => options.UseSqlServer(Configuration.GetConnectionString("FoodTrackerDatabase")));
 
             services.AddTransient<IMealService, MealService>();
+            services.AddTransient<IIngredientsService, IngredientsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

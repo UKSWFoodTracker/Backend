@@ -12,10 +12,12 @@ namespace FoodTracker.Domain.Services
     public class MealService : IMealService
     {
         private readonly FoodTrackerContext _context;
+        private readonly IIngredientsService _ingredientsService;
 
-        public MealService(FoodTrackerContext context)
+        public MealService(FoodTrackerContext context, IIngredientsService ingredientsService)
         {
             _context = context;
+            _ingredientsService = ingredientsService;
         }
 
         public async Task<IEnumerable<Meal>> GetAllMealsAsync()
@@ -40,24 +42,9 @@ namespace FoodTracker.Domain.Services
 
             foreach (var ingredient in ingredients)
             {
-                int ingredientId;
-                if (_context.Ingredients.Any(i => i.Name == ingredient.Name))
-                {
-                    ingredientId = _context.Ingredients
-                        .Where(i => i.Name == ingredient.Name)
-                        .Select(i => i.Id)
-                        .Single();
-                }
-                else
-                {
-                    await _context.Ingredients.AddAsync(ingredient);
-                    _context.SaveChanges();
+                var createIngredient = await _ingredientsService.CreateIngredient(ingredient);
 
-                    ingredientId = ingredient.Id;
-                }
-
-                var mealIngredient = new MealIngredient { MealId = meal.Id, IngredientId = ingredientId };
-
+                var mealIngredient = new MealIngredient { MealId = meal.Id, IngredientId = createIngredient.Id };
                 await _context.MealIngredients.AddAsync(mealIngredient);
             }
 
@@ -88,24 +75,9 @@ namespace FoodTracker.Domain.Services
 
             foreach (var ingredient in updateIngredients)
             {
-                int ingredientId;
-                if (_context.Ingredients.Any(i => i.Name == ingredient.Name))
-                {
-                    ingredientId = _context.Ingredients
-                        .Where(i => i.Name == ingredient.Name)
-                        .Select(i => i.Id)
-                        .Single();
-                }
-                else
-                {
-                    await _context.Ingredients.AddAsync(ingredient);
-                    _context.SaveChanges();
+                var createIngredient = await _ingredientsService.CreateIngredient(ingredient);
 
-                    ingredientId = ingredient.Id;
-                }
-
-                var mealIngredient = new MealIngredient { MealId = updateMeal.Id, IngredientId = ingredientId };
-
+                var mealIngredient = new MealIngredient { MealId = updateMeal.Id, IngredientId = createIngredient.Id };
                 await _context.MealIngredients.AddAsync(mealIngredient);
             }
 
