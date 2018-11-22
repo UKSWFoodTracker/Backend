@@ -1,15 +1,13 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using System.Threading.Tasks;
 using FoodTracker.Domain.Helpers.Exceptions;
 using FoodTracker.Domain.Services.Interfaces;
 using FoodTracker.DTO;
+using FoodTracker.Helpers;
 using FoodTracker.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FoodTracker.Controllers
 {
@@ -48,21 +46,8 @@ namespace FoodTracker.Controllers
                 throw;
             }
                 
-            var token = buildToken(user);
+            var token = Jwt.BuildToken(user, _config);
             return Ok(new {token });
-        }
-
-        private string buildToken(Account user)
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Issuer"],
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
