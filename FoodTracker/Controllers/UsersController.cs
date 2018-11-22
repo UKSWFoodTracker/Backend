@@ -26,7 +26,7 @@ namespace FoodTracker.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         [Route("login")]
         public async Task<IActionResult> LoginAsync([FromBody]LoginDto login)
         {
@@ -46,9 +46,9 @@ namespace FoodTracker.Controllers
                 }
                 throw;
             }
-                
+
             var token = Jwt.BuildToken(user, _config);
-            return Ok(new {token });
+            return Ok(new { token });
         }
 
         [AllowAnonymous]
@@ -76,7 +76,7 @@ namespace FoodTracker.Controllers
             }
 
             var token = Jwt.BuildToken(user, _config);
-            return Ok(new { token });
+            return Created(nameof(LoginAsync), new { token });
         }
     }
 }

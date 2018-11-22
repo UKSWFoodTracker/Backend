@@ -23,12 +23,12 @@ namespace FoodTracker.Controllers
         }
 
         [HttpGet, Authorize]
-        public IEnumerable<IngredientDto> GetAllIngredients()
+        public ActionResult<IEnumerable<IngredientDto>> GetAllIngredients()
         {
             var ingredients = _ingredientsService.GetAllIngredients();
             var dtos = ingredients.Select(i => _mapper.Map<Ingredient, IngredientDto>(i));
 
-            return dtos;
+            return new OkObjectResult(dtos);
         }
     }
 }
