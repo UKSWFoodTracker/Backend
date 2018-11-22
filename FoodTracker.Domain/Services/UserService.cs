@@ -25,7 +25,7 @@ namespace FoodTracker.Domain.Services
 
             var validPassword = await _userManager.CheckPasswordAsync(user, password);
             if (!validPassword)
-                throw new InvalidPasswordException();
+                throw new PasswordInvalidException();
 
             return user;
         }
@@ -40,9 +40,11 @@ namespace FoodTracker.Domain.Services
             throw new NotImplementedException();
         }
 
-        public Account Create(Account account, string password)
+        public async Task CreateAsync(Account account, string password)
         {
-            throw new NotImplementedException();
+            var result = await _userManager.CreateAsync(account, password);
+            if (!result.Succeeded)
+                throw new AccountCreateFailedException();
         }
     }
 }

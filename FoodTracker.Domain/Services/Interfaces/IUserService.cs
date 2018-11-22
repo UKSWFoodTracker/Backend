@@ -9,6 +9,6 @@ namespace FoodTracker.Domain.Services.Interfaces
         Task<Account> AuthenticateAsync(string username, string password);
         IEnumerable<Account> GetAll();
         Account GetById(int id);
-        Account Create(Account account, string password);
+        Task CreateAsync(Account account, string password);
     }
 }

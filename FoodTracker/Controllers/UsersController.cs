@@ -4,6 +4,7 @@ using FoodTracker.Domain.Helpers.Exceptions;
 using FoodTracker.Domain.Services.Interfaces;
 using FoodTracker.DTO;
 using FoodTracker.Helpers;
+using FoodTracker.Helpers.Exceptions;
 using FoodTracker.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,12 @@ namespace FoodTracker.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IConfiguration _config;
         private readonly IUserService _userService;
 
-        public UserController(IConfiguration config, IUserService userService)
+        public UsersController(IConfiguration config, IUserService userService)
         {
             _config = config;
             _userService = userService;
@@ -30,7 +31,7 @@ namespace FoodTracker.Controllers
         public async Task<IActionResult> LoginAsync([FromBody]LoginDto login)
         {
             if (!ModelState.IsValid)
-                throw new Exception("Login model is invalid");
+                throw new InvalidModelException();
 
             Account user;
             try
@@ -39,7 +40,7 @@ namespace FoodTracker.Controllers
             }
             catch (Exception exception)
             {
-                if (exception is AccountNotFoundException || exception is InvalidPasswordException)
+                if (exception is AccountNotFoundException || exception is PasswordInvalidException)
                 {
                     return Unauthorized();
                 }
@@ -48,6 +49,34 @@ namespace FoodTracker.Controllers
                 
             var token = Jwt.BuildToken(user, _config);
             return Ok(new {token });
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto register)
+        {
+            if (!ModelState.IsValid)
+                throw new InvalidModelException();
+
+            var user = new Account { Email = register.Email, UserName = register.Name };
+            await _userService.CreateAsync(user, register.Password);
+
+            try
+            {
+                user = await _userService.AuthenticateAsync(register.Name, register.Password);
+            }
+            catch (Exception exception)
+            {
+                if (exception is AccountNotFoundException || exception is PasswordInvalidException)
+                {
+                    return Unauthorized();
+                }
+                throw;
+            }
+
+            var token = Jwt.BuildToken(user, _config);
+            return Ok(new { token });
         }
     }
 }
