@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FoodTracker.Database\FoodTracker.Database.csproj" />
     <ProjectReference Include="..\FoodTracker.Model\FoodTracker.Model.csproj" />
   </ItemGroup>

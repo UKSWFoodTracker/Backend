@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using FoodTracker.Domain.Services.Interfaces;
 using FoodTracker.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodTracker.Controllers
 {
@@ -21,13 +22,13 @@ namespace FoodTracker.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public IEnumerable<IngredientDto> GetAllIngredients()
+        [HttpGet, Authorize]
+        public ActionResult<IEnumerable<IngredientDto>> GetAllIngredients()
         {
             var ingredients = _ingredientsService.GetAllIngredients();
             var dtos = ingredients.Select(i => _mapper.Map<Ingredient, IngredientDto>(i));
 
-            return dtos;
+            return new OkObjectResult(dtos);
         }
     }
 }

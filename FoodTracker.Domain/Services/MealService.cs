@@ -35,6 +35,15 @@ namespace FoodTracker.Domain.Services
             return mealsWithIngredients;
         }
 
+        public async Task<Meal> GetMealByIdAsync(int id)
+        {
+            var selectedMeal = await _context.Meals
+                .Include(m => m.MealIngredients).ThenInclude(mi => mi.Ingredient)
+                .SingleOrDefaultAsync(m => m.Id == id);
+
+            return selectedMeal;
+        }
+
         public async Task CreateMealAsync(Meal meal, IEnumerable<Ingredient> ingredients)
         {
             await _context.AddAsync(meal);
