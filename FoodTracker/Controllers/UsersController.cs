@@ -26,7 +26,7 @@ namespace FoodTracker.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost]
         [Route("login")]
         public async Task<IActionResult> LoginAsync([FromBody]LoginDto login)
         {
