@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FoodTracker.Model
@@ -9,5 +10,6 @@ namespace FoodTracker.Model
         [Required]
         public string Name { get; set; }
         public ICollection<MealIngredient> MealIngredients { get; set; }
+        public DateTime Created { get; set; }
     }
 }

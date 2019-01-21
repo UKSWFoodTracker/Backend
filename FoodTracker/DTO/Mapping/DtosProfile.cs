@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using FoodTracker.Model;
 
 namespace FoodTracker.DTO.Mapping
@@ -20,7 +21,8 @@ namespace FoodTracker.DTO.Mapping
 
             CreateMap<Meal, MealDto>()
                 .ForMember(dto => dto.Name, opt => opt.MapFrom(model => model.Name))
-                .ForMember(dto => dto.Ingredients, opt => opt.MapFrom(model => model.MealIngredients));
+                .ForMember(dto => dto.Ingredients, opt => opt.MapFrom(model => model.MealIngredients))
+                .ForMember(dto => dto.Created, opt => opt.MapFrom(model => model.Created));
 
             CreateMap<Meal, MealUpdateDto>()
                 .ReverseMap()
@@ -30,7 +32,8 @@ namespace FoodTracker.DTO.Mapping
             CreateMap<Meal, MealCreateDto>()
                 .ReverseMap()
                 .ForMember(model => model.Name, opt => opt.MapFrom(dto => dto.Name))
-                .ForMember(model => model.MealIngredients, opt => opt.Ignore());
+                .ForMember(model => model.MealIngredients, opt => opt.Ignore())
+                .ForMember(model => model.Created, opt => opt.MapFrom((dto => DateTime.Now)));
         }
     }
 }
