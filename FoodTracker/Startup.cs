@@ -63,9 +63,9 @@ namespace FoodTracker
                 };
             });
 
+            services.AddCors();
             services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddCors();
 
             services.AddSwaggerGen(c =>
                 {
@@ -93,7 +93,7 @@ namespace FoodTracker
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseAuthentication();
             app.UseMvc();
 
